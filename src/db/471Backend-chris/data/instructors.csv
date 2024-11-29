@@ -1,0 +1,6 @@
+name,employeeId,email,coursesTeaching,departmentCode
+Dr. Wayne Eberly,201,wayne.eberly@example.com,"[101,102]",1
+Dr. Peter Hoyer,202,peter.hoyer@example.com,"[201,202]",2
+Dr. Grace Hopper,203,grace.hopper@example.com,"[301,302]",3
+Dr. Donald Knuth,204,donald.knuth@example.com,"[401,402]",4
+Dr. Katherine Johnson,205,katherine.johnson@example.com,"[501,502]",5

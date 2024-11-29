@@ -1,0 +1,6 @@
+name,employeeId,email,coursesToMaintain
+Admin One,101,admin.one@example.com,"[CPSC217,CPSC219]"
+Admin Two,102,admin.two@example.com,"[CPSC231,CPSC233]"
+Admin Three,103,admin.three@example.com,"[CPSC393,302]"
+Admin Four,104,admin.four@example.com,"[401,402]"
+Admin Five,105,admin.five@example.com,"[501,502]"

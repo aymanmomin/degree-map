@@ -1,0 +1,3 @@
+programId,departmentId,name,description,type
+CPSC_MAJ,3,Computer Science Major,"Undergraduate BA program focusing on foundational and advanced computer science concepts.",major
+CPSC_MIN,3,Computer Science Minor,"The Computer Science Minor program offers foundational and advanced knowledge in computer science, requiring a combination of core and elective courses from the field of Computer Science.",minor

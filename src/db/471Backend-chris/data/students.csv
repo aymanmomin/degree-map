@@ -1,0 +1,6 @@
+ucid,name,enrollmentDate,studyYear,email,studentMajor,studentMinor,studentConcentration,facultyId
+1001,John Doe,2022-09-01,2,john.doe@ucalgary.ca,1,1,1,1
+1002,Jane Smith,2021-09-01,3,jane.smith@ucalgary.ca,2,2,2,2
+1003,Sam Taylor,2020-09-01,4,sam.taylor@ucalgary.ca,3,3,3,3
+1004,Lisa Brown,2023-09-01,1,lisa.brown@ucalgary.ca,4,4,4,4
+1005,Michael Green,2022-01-15,2,michael.green@ucalgary.ca,5,5,5,5
