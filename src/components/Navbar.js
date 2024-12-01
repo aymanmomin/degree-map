@@ -57,7 +57,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
-                      Edit Profile
+                      Profile
                     </a>
                   </li>
                   <li>
