@@ -2,54 +2,67 @@ import React from "react";
 
 export default function Navbar() {
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+    <>
+      <nav className="navbar navbar-expand-lg bg-dark  " data-bs-theme="dark">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            Navbar
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+          <a
+            className="navbar-brand pe-none"
+            tabindex="-1"
+            aria-disabled="true"
+            href="#"
           >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+            DegreeMap
+          </a>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
-                  Home
+                <a className="nav-link" aria-current="page" href="#">
+                  Dashboard
                 </a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
-                  Link
+                  Degree Planner
                 </a>
               </li>
-              <li className="nav-item dropdown">
+              <li className="nav-item">
+                <a className="nav-link" href="#">
+                  Course Catalogue
+                </a>
+              </li>
+            </ul>
+            <div className="d-flex navbar-nav mb-2 mb-lg-0">
+              <div class="dropdown-center">
                 <a
-                  className="nav-link dropdown-toggle"
+                  className="btn btn-secondary dropdown-toggle"
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Dropdown
+                  <img
+                    src="https://avatars.githubusercontent.com/u/63975056?s=48&v=4"
+                    alt="profile pic"
+                    width="30"
+                    height="30"
+                    className="rounded-circle"
+                  />{" "}
+                  Ayman M
                 </a>
-                <ul className="dropdown-menu">
+                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                   <li>
-                    <a className="dropdown-item" href="#">
-                      Action
+                    <a class="dropdown-item disabled" href="#">
+                      UCID: 30192494
                     </a>
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
-                      Another action
+                      Edit Profile
+                    </a>
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Mange Interests
                     </a>
                   </li>
                   <li>
@@ -57,31 +70,15 @@ export default function Navbar() {
                   </li>
                   <li>
                     <a className="dropdown-item" href="#">
-                      Something else here
+                      Sign Out
                     </a>
                   </li>
                 </ul>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link disabled" aria-disabled="true">
-                  Disabled
-                </a>
-              </li>
-            </ul>
-            <form className="d-flex" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
+              </div>
+            </div>
           </div>
         </div>
       </nav>
-    </div>
+    </>
   );
 }
