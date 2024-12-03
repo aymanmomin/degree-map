@@ -1,67 +1,60 @@
 import React, { useState } from "react";
 
 export default function ManageInterests() {
-  // State for storing interests by question
-  const [interests, setInterests] = useState({
-    careerGoals: [],
-    likes: [],
-    studyTopics: [],
-  });
+  // State for storing current interests
+  const [interests, setInterests] = useState([
+    "Career Goals", // Example, can be dynamic or fetched from API
+    "Likes", // Example, can be dynamic or fetched from API
+  ]);
 
   // State for input fields and errors
-  const [currentInput, setCurrentInput] = useState({
-    careerGoals: "",
-    likes: "",
-    studyTopics: "",
-  });
-
-  const [errors, setErrors] = useState({});
+  const [currentInput, setCurrentInput] = useState("");
+  const [errors, setErrors] = useState("");
 
   // Handle input change
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentInput({ ...currentInput, [name]: value });
+    setCurrentInput(e.target.value);
   };
 
   // Add interest to the list
-  const handleAddInterest = (category) => {
-    const trimmedValue = currentInput[category].trim();
+  const handleAddInterest = () => {
+    const trimmedValue = currentInput.trim();
     if (trimmedValue) {
-      setInterests({
-        ...interests,
-        [category]: [...interests[category], trimmedValue],
-      });
-      setCurrentInput({ ...currentInput, [category]: "" });
-      setErrors({ ...errors, [category]: "" });
+      // Check if the interest already exists
+      if (!interests.includes(trimmedValue)) {
+        setInterests([...interests, trimmedValue]);
+        setCurrentInput(""); // Clear the input field
+        setErrors(""); // Reset errors
+      } else {
+        setErrors("This interest already exists.");
+      }
     } else {
-      setErrors({ ...errors, [category]: "This field cannot be empty." });
+      setErrors("This field cannot be empty.");
     }
   };
 
   // Remove an interest from the list
-  const handleRemoveInterest = (category, index) => {
-    setInterests({
-      ...interests,
-      [category]: interests[category].filter((_, i) => i !== index),
-    });
+  const handleRemoveInterest = (index) => {
+    const updatedInterests = interests.filter((_, i) => i !== index);
+    setInterests(updatedInterests); // Update the interests list
   };
 
   // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate if each category has at least one interest
-    const newErrors = {};
-    for (const category in interests) {
-      if (interests[category].length === 0) {
-        newErrors[category] = "Please add at least one interest.";
+    // Combine all categories into a single list
+    const newInterest = currentInput.trim();
+    if (newInterest) {
+      if (!interests.includes(newInterest)) {
+        setInterests([...interests, newInterest]);
+        setCurrentInput(""); // Clear the input field
+        setErrors(""); // Reset errors
+      } else {
+        setErrors("This interest already exists.");
       }
-    }
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      console.log("Submitted Interests:", interests);
-      alert("Interests saved successfully!");
+    } else {
+      setErrors("This field cannot be empty.");
     }
   };
 
@@ -70,131 +63,59 @@ export default function ManageInterests() {
       <div className="container">
         <div className="p-4 mb-4 shadow-sm bg-white rounded">
           <h2 className="text-primary">Manage Your Interests</h2>
+
+          {/* Your Interests Section */}
+          <div className="mb-4">
+            <h4>Your Interests:</h4>
+            {interests.length > 0 ? (
+              <div className="mt-2">
+                {interests.map((interest, index) => (
+                  <span key={index} className="badge bg-primary me-2">
+                    {interest}{" "}
+                    <button
+                      type="button"
+                      className="btn-close btn-close-white ms-1"
+                      aria-label="Remove"
+                      onClick={() => handleRemoveInterest(index)}
+                    ></button>
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p>No interests added yet.</p>
+            )}
+          </div>
+
           <p className="text-secondary">
             Answer the following questions to find topics you may want to study.
+            <ol>
+              <li>What are your career goals?</li>
+              <li>What do you enjoy or like?</li>
+              <li>What topics do you want to study?</li>
+            </ol>
           </p>
+
+          {/* Add New Interest Form */}
           <form onSubmit={handleSubmit}>
-            {/* Career Goals */}
             <div className="mb-4">
-              <h4>1. What are your career goals?</h4>
               <div className="input-group mb-3">
                 <input
                   type="text"
-                  className={`form-control ${
-                    errors.careerGoals ? "is-invalid" : ""
-                  }`}
-                  placeholder="Enter a career goal..."
-                  name="careerGoals"
-                  value={currentInput.careerGoals}
+                  className={`form-control ${errors ? "is-invalid" : ""}`}
+                  placeholder="Enter an interest..."
+                  value={currentInput}
                   onChange={handleInputChange}
                 />
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => handleAddInterest("careerGoals")}
+                  onClick={handleAddInterest}
                 >
                   Add
                 </button>
-                {errors.careerGoals && (
-                  <div className="invalid-feedback">{errors.careerGoals}</div>
-                )}
-              </div>
-              <div className="mt-2">
-                {interests.careerGoals.map((goal, index) => (
-                  <span key={index} className="badge bg-primary me-2">
-                    {goal}{" "}
-                    <button
-                      type="button"
-                      className="btn-close btn-close-white ms-1"
-                      aria-label="Remove"
-                      onClick={() => handleRemoveInterest("careerGoals", index)}
-                    ></button>
-                  </span>
-                ))}
+                {errors && <div className="invalid-feedback">{errors}</div>}
               </div>
             </div>
-
-            {/* Likes */}
-            <div className="mb-4">
-              <h4>2. What do you enjoy or like?</h4>
-              <div className="input-group mb-3">
-                <input
-                  type="text"
-                  className={`form-control ${errors.likes ? "is-invalid" : ""}`}
-                  placeholder="Enter something you like..."
-                  name="likes"
-                  value={currentInput.likes}
-                  onChange={handleInputChange}
-                />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => handleAddInterest("likes")}
-                >
-                  Add
-                </button>
-                {errors.likes && (
-                  <div className="invalid-feedback">{errors.likes}</div>
-                )}
-              </div>
-              <div className="mt-2">
-                {interests.likes.map((like, index) => (
-                  <span key={index} className="badge bg-success me-2">
-                    {like}{" "}
-                    <button
-                      type="button"
-                      className="btn-close btn-close-white ms-1"
-                      aria-label="Remove"
-                      onClick={() => handleRemoveInterest("likes", index)}
-                    ></button>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Study Topics */}
-            <div className="mb-4">
-              <h4>3. What topics do you want to study?</h4>
-              <div className="input-group mb-3">
-                <input
-                  type="text"
-                  className={`form-control ${
-                    errors.studyTopics ? "is-invalid" : ""
-                  }`}
-                  placeholder="Enter a topic..."
-                  name="studyTopics"
-                  value={currentInput.studyTopics}
-                  onChange={handleInputChange}
-                />
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={() => handleAddInterest("studyTopics")}
-                >
-                  Add
-                </button>
-                {errors.studyTopics && (
-                  <div className="invalid-feedback">{errors.studyTopics}</div>
-                )}
-              </div>
-              <div className="mt-2">
-                {interests.studyTopics.map((topic, index) => (
-                  <span key={index} className="badge bg-danger me-2">
-                    {topic}{" "}
-                    <button
-                      type="button"
-                      className="btn-close btn-close-white ms-1"
-                      aria-label="Remove"
-                      onClick={() => handleRemoveInterest("studyTopics", index)}
-                    ></button>
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-primary">
-              Save Interests
-            </button>
           </form>
         </div>
       </div>
