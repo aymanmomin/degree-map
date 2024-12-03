@@ -8,7 +8,7 @@ export default function Navbar() {
         <div className="container-fluid">
           <a
             className="navbar-brand pe-none"
-            tabindex="-1"
+            tabIndex="-1"
             aria-disabled="true"
             href="#"
           >
@@ -17,24 +17,34 @@ export default function Navbar() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link" to="/dashboard">
+                <Link className="nav-link" aria-current="page" to="#">
                   Dashboard
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/degree-planner">
-                  Degree Planner
+                <Link className="nav-link" to="/manage-programs">
+                  Manage Programs
                 </Link>
               </li>
               <li className="nav-item">
-              <Link className="nav-link" to="/courses">
-                  Course Catalogue
+                <Link className="nav-link" to="/manage-courses">
+                  Manage Courses
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/manage-instructors">
+                  Manage Instructors
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/manage-students">
+                  Manage Students
                 </Link>
               </li>
             </ul>
             <div className="d-flex navbar-nav mb-2 mb-lg-0">
               <div className="dropdown-center">
-                <a
+                <span
                   className="btn btn-secondary dropdown-toggle"
                   href="#"
                   role="button"
@@ -48,23 +58,13 @@ export default function Navbar() {
                     height="30"
                     className="rounded-circle"
                   />{" "}
-                  Ayman M
-                </a>
+                  Admin 1
+                </span>
                 <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                   <li>
-                    <a className="dropdown-item disabled" href="#">
-                      UCID: 30192494
-                    </a>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/view-profile">
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/manage-interests">
-                      Mange Interests
-                    </Link>
+                    <span className="dropdown-item disabled">
+                      UCAID: 10192494
+                    </span>
                   </li>
                   <li>
                     <hr className="dropdown-divider" />
