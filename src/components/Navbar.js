@@ -27,9 +27,9 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+              <Link className="nav-link" to="/courses">
                   Course Catalogue
-                </a>
+                </Link>
               </li>
             </ul>
             <div className="d-flex navbar-nav mb-2 mb-lg-0">

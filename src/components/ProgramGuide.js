@@ -81,8 +81,12 @@ export default function ProgramGuide() {
         <div className="row mt-4">
           <div className="col-md-12">
             <h2>Information Hub:</h2>
-            <p>• The program must contain at least 120 units with a maximum of 48 units at the Junior Level (200 level courses). • A Non-Major Field Option is any option NOT in the field of Computer Science. • A Non-Science Option is any course from faculties other than the Faculty of Science, excluding courses in Table 1. • An Open Option is any course offered by any Faculty. • A link to courses/course descriptions is available in the Academic Calendar.
-</p>
+            <p>• The program must contain at least 120 units with a maximum of 48 units at the Junior Level (200 level courses). 
+            <br/>• A Non-Major Field Option is any option NOT in the field of Computer Science. 
+            <br/>• A Non-Science Option is any course from faculties other than the Faculty of Science, excluding courses in Table 1.
+            <br/>• An Open Option is any course offered by any Faculty.
+            <br/>• A link to courses/course descriptions is available in the Academic Calendar.
+            </p>
             <p>
               <a className="btn" href="#">
                 More details »
