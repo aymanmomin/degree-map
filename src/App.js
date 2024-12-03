@@ -2,6 +2,8 @@ import "./App.css";
 import ManageInterests from "./components/ManageInterests";
 import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
+import ProgramGuide from "./components/ProgramGuide";
+import Dashboard from "./components/Dashboard";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
         <Routes>
           <Route path="/view-profile" element={<Profile />} />
           <Route path="/manage-interests" element={<ManageInterests />} />
+          <Route path="/degree-planner" element={<ProgramGuide />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </>
