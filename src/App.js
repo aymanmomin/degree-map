@@ -4,7 +4,8 @@ import Navbar from "./components/Navbar";
 import Profile from "./components/Profile";
 
 import AdminBar from "./admin-components/Navbar";
-import AdminDashboard from "./admin-components/Dashboard";
+// import AdminDashboard from "./admin-components/Dashboard";
+import ManageProgramForm from "./admin-components/ManageProgramForm";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
@@ -20,11 +21,8 @@ function App() {
           {userType === "admin" ? (
             <>
               {/* Admin Routes */}
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
-              <Route
-                path="/manage-interests"
-                element={<ManageInterests />} // Admin can also manage interests
-              />
+              {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
+              <Route path="/manage-programs" element={<ManageProgramForm />} />
             </>
           ) : (
             <>

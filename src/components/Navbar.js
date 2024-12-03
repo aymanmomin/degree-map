@@ -33,7 +33,7 @@ export default function Navbar() {
               </li>
             </ul>
             <div className="d-flex navbar-nav mb-2 mb-lg-0">
-              <div class="dropdown-center">
+              <div className="dropdown-center">
                 <a
                   className="btn btn-secondary dropdown-toggle"
                   href="#"
@@ -50,9 +50,9 @@ export default function Navbar() {
                   />{" "}
                   Ayman M
                 </a>
-                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                   <li>
-                    <a class="dropdown-item disabled" href="#">
+                    <a className="dropdown-item disabled" href="#">
                       UCID: 30192494
                     </a>
                   </li>

@@ -8,7 +8,7 @@ export default function Navbar() {
         <div className="container-fluid">
           <a
             className="navbar-brand pe-none"
-            tabindex="-1"
+            tabIndex="-1"
             aria-disabled="true"
             href="#"
           >
@@ -22,9 +22,9 @@ export default function Navbar() {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="/manage-programs">
                   Manage Programs
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
@@ -43,7 +43,7 @@ export default function Navbar() {
               </li>
             </ul>
             <div className="d-flex navbar-nav mb-2 mb-lg-0">
-              <div class="dropdown-center">
+              <div className="dropdown-center">
                 <a
                   className="btn btn-secondary dropdown-toggle"
                   href="#"
@@ -60,9 +60,9 @@ export default function Navbar() {
                   />{" "}
                   Admin 1
                 </a>
-                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                   <li>
-                    <a class="dropdown-item disabled" href="#">
+                    <a className="dropdown-item disabled" href="#">
                       UCAID: 10192494
                     </a>
                   </li>
