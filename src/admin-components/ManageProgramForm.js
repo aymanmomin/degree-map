@@ -324,14 +324,7 @@ function ManageProgramsForm() {
                   className="btn btn-danger"
                   onClick={() => setShowConfirmation(true)}
                 >
-                  Delete Program
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
+                  Delete
                 </button>
                 <button
                   type="button"
