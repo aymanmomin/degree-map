@@ -14,7 +14,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
 function App() {
-  const [userType, setUserType] = useState("admin"); // Change to 'admin' for admin views
+  const [userType, setUserType] = useState("student"); // Change to 'admin' for admin views
 
   return (
     <>
@@ -24,7 +24,7 @@ function App() {
           {userType === "admin" ? (
             <>
               {/* Admin Routes */}
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />c
               <Route path="/manage-programs" element={<ManageProgramForm />} />
               <Route path="/manage-courses" element={<ManageCoursesForm />} />
               <Route
