@@ -17,9 +17,9 @@ export default function Navbar() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link" aria-current="page" href="#">
+                <Link className="nav-link" aria-current="page" to="#">
                   Dashboard
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/manage-programs">
@@ -27,24 +27,24 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="#">
                   Manage Courses
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="#">
                   Manage Instructors
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="#">
                   Manage Students
-                </a>
+                </Link>
               </li>
             </ul>
             <div className="d-flex navbar-nav mb-2 mb-lg-0">
               <div className="dropdown-center">
-                <a
+                <span
                   className="btn btn-secondary dropdown-toggle"
                   href="#"
                   role="button"
@@ -59,12 +59,12 @@ export default function Navbar() {
                     className="rounded-circle"
                   />{" "}
                   Admin 1
-                </a>
+                </span>
                 <ul className="dropdown-menu dropdown-menu-dark dropdown-menu-end">
                   <li>
-                    <a className="dropdown-item disabled" href="#">
+                    <span className="dropdown-item disabled">
                       UCAID: 10192494
-                    </a>
+                    </span>
                   </li>
                   <li>
                     <hr className="dropdown-divider" />
