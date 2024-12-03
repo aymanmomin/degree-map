@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   // State for personal details
@@ -10,13 +10,22 @@ export default function Profile() {
     dob: "1995-06-15",
   });
 
+  //   // State for user interests
+  //   const [interests, setInterests] = useState({
+  //     careerGoals: ["AI Researcher", "Entrepreneur"],
+  //     likes: ["Web Development", "Gaming"],
+  //     studyTopics: ["Data Science", "Machine Learning"],
+  //   });
+  // Static interests for display only
+  const interests = ["AI", "Web Development", "Data Science"];
+
   // State for validation feedback and edit mode
   const [isEditing, setIsEditing] = useState(false);
   const [formValues, setFormValues] = useState(personalDetails);
   const [errors, setErrors] = useState({});
 
   // Security State
-  const [currentPassword, setCurrentPassword] = useState("Current@123"); // Stored current password (mocked for now)
+  const [currentPassword, setCurrentPassword] = useState("Current@123");
   const [passwordFields, setPasswordFields] = useState({
     currentPassword: "",
     newPassword: "",
@@ -24,7 +33,7 @@ export default function Profile() {
   });
   const [passwordErrors, setPasswordErrors] = useState({});
 
-  // Toggle edit mode
+  // Toggle edit mode for personal details
   const handleEditClick = () => {
     setIsEditing(!isEditing);
     if (isEditing) {
@@ -41,13 +50,13 @@ export default function Profile() {
     }
   };
 
-  // Handle input changes
+  // Handle input changes for personal details
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
-  // Form validation logic
+  // Form validation logic for personal details
   const validateForm = () => {
     const newErrors = {};
     if (!formValues.firstName.trim())
@@ -67,7 +76,7 @@ export default function Profile() {
     setPasswordFields({ ...passwordFields, [name]: value });
   };
 
-  // Validate password fields
+  // Validate and update passwords
   const validatePasswords = () => {
     const errors = {};
     const {
@@ -103,6 +112,14 @@ export default function Profile() {
       });
     }
   };
+
+  // Handle removing an interest
+  //   const handleRemoveInterest = (category, index) => {
+  //     setInterests({
+  //       ...interests,
+  //       [category]: interests[category].filter((_, i) => i !== index),
+  //     });
+  //   };
 
   return (
     <div className="py-5 bg-light">
@@ -140,6 +157,7 @@ export default function Profile() {
             </div>
           </div>
         </div>
+
         {/* Section 2: Personal Details */}
         <div className="p-4 mb-4 shadow-sm bg-white rounded">
           <div className="d-flex justify-content-between align-items-center">
@@ -229,24 +247,28 @@ export default function Profile() {
             </div>
           </form>
         </div>
+
         {/* Section 3: Interests */}
         <div className="p-4 mb-4 shadow-sm bg-white rounded">
           <div className="d-flex justify-content-between align-items-center">
             <h2 className="text-primary">Interests</h2>
-            <a href="#" className="btn btn-secondary">
-              Edit Interests
-            </a>
+            <Link to="/manage-interests" className="btn btn-primary">
+              Manage Interests
+            </Link>
           </div>
           <div className="mt-2">
-            <span className="badge bg-primary me-2">AI</span>
-            <span className="badge bg-secondary me-2">Web Development</span>
-            <span className="badge bg-danger">Data Science</span>
+            {interests.map((interest, index) => (
+              <span key={index} className="badge bg-secondary me-2">
+                {interest}
+              </span>
+            ))}
           </div>
         </div>
+
         {/* Section 4: Security */}
         <div className="p-4 mb-4 shadow-sm bg-white rounded">
-          <h2 className="text-primary">Security</h2>
           <form onSubmit={handlePasswordUpdate}>
+            <h2 className="text-primary">Security</h2>
             <div className="row g-3">
               {/* Current Password */}
               <div className="col-md-4">
