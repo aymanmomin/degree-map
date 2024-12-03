@@ -10,6 +10,9 @@ import ManageCoursesForm from "./admin-components/ManageCoursesForm";
 import ManageInstructorsForm from "./admin-components/ManageInstructorsForm";
 import ManageStudentsForm from "./admin-components/ManageStudentsForm";
 
+import ProgramGuide from "./components/ProgramGuide";
+import Dashboard from "./components/Dashboard";
+import Courses from "./components/Courses";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
@@ -38,6 +41,9 @@ function App() {
               {/* Student Routes */}
               <Route path="/view-profile" element={<Profile />} />
               <Route path="/manage-interests" element={<ManageInterests />} />
+              <Route path="/degree-planner" element={<ProgramGuide />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/courses" element={<Courses />} />
             </>
           )}
         </Routes>
