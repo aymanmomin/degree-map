@@ -157,7 +157,7 @@ function ManageCoursesForm() {
       <div className="container mt-5">
         {/* Section 1: Form */}
         <div id="section1Form" className="p-4 mb-4 shadow-sm bg-white rounded">
-          <h2 className="text-primary">Manage Courses</h2>
+          <h2 className="text-primary">Manage Course</h2>
           <form
             onSubmit={(e) => {
               e.preventDefault();
