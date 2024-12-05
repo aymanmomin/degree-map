@@ -17,7 +17,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
 function App() {
-  const [userType, setUserType] = useState("student"); // Change to 'admin' for admin views
+  const [userType, setUserType] = useState("admin"); // Change to 'admin' for admin views
 
   return (
     <>

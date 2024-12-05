@@ -243,7 +243,7 @@ function ManageProgramsForm() {
             <input
               type="text"
               className="form-control"
-              placeholder="Search programs..."
+              placeholder="Search programs by name"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

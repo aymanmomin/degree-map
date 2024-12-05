@@ -3,12 +3,22 @@ import React, { useState, useEffect } from "react";
 function ManageCoursesForm() {
   const [courses, setCourses] = useState([
     {
+      id: 1,
       departmentCode: "CPSC",
-      courseNumber: 471,
+      courseNumber: "471",
       courseCode: "CPSC 471",
       courseTitle: "DBMS",
-      courseDescription: "Study of computing and programming.",
+      courseDescription: "Database Management Systems",
       keywords: ["DBMS", "Database"],
+    },
+    {
+      id: 2,
+      departmentCode: "CPSC",
+      courseNumber: "481",
+      courseCode: "CPSC 481",
+      courseTitle: "HCI",
+      courseDescription: "Human-Computer Interaction",
+      keywords: ["HCI", "UI/UX", "Human Computer"],
     },
   ]);
 
@@ -17,24 +27,24 @@ function ManageCoursesForm() {
     courseNumber: "",
     courseCode: "",
     courseTitle: "",
-    description: "",
+    courseDescription: "",
     keywords: [],
   });
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const departmentCodes = ["CPSC", "SENG", "FREN", "ECON", "MATH", "PHYS"];
-  const courseNumbers = Array.from({ length: 700 }, (_, i) => 100 + i); // Generate numbers from 100 to 799
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [keywordInput, setKeywordInput] = useState("");
 
+  const departmentCodes = ["CPSC", "SENG", "FREN", "ECON", "MATH", "PHYS"];
+  const courseNumbers = Array.from({ length: 700 }, (_, i) =>
+    (100 + i).toString()
+  );
+
   useEffect(() => {
-    if (formData.departmentCode && formData.courseNumber) {
-      setFormData((prev) => ({
-        ...prev,
-        courseCode: `${formData.departmentCode} ${formData.courseNumber}`,
-      }));
+    if (selectedCourse) {
+      setFormData(selectedCourse);
     }
-  }, [formData.departmentCode, formData.courseNumber]);
+  }, [selectedCourse]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,43 +52,50 @@ function ManageCoursesForm() {
   };
 
   const handleKeywordAdd = () => {
-    if (keywordInput.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        keywords: [...prev.keywords, keywordInput.trim()],
-      }));
+    if (keywordInput && !formData.keywords.includes(keywordInput)) {
+      setFormData({
+        ...formData,
+        keywords: [...formData.keywords, keywordInput],
+      });
       setKeywordInput("");
     }
   };
 
-  const handleKeywordRemove = (keyword) => {
-    setFormData((prev) => ({
-      ...prev,
-      keywords: prev.keywords.filter((kw) => kw !== keyword),
-    }));
+  const handleKeywordRemove = (keywordToRemove) => {
+    setFormData({
+      ...formData,
+      keywords: formData.keywords.filter((kw) => kw !== keywordToRemove),
+    });
   };
 
   const handleSave = () => {
+    const courseNumberInt = parseInt(formData.courseNumber, 10);
     if (
-      !formData.courseCode ||
+      !formData.departmentCode ||
       !formData.courseTitle ||
-      !formData.description
+      !formData.courseDescription ||
+      isNaN(courseNumberInt) ||
+      courseNumberInt < 100 ||
+      courseNumberInt > 799
     ) {
-      alert("Please fill out all required fields.");
+      alert("Please fill out all required fields correctly.");
       return;
     }
 
-    const existingIndex = courses.findIndex(
-      (course) => course.courseCode === formData.courseCode
-    );
-    if (existingIndex !== -1) {
-      const updatedCourses = [...courses];
-      updatedCourses[existingIndex] = { ...formData };
-      setCourses(updatedCourses);
-    } else {
-      setCourses([...courses, { ...formData }]);
-    }
+    const courseCode = `${formData.departmentCode} ${formData.courseNumber}`;
+    const updatedFormData = { ...formData, courseCode };
 
+    if (selectedCourse) {
+      setCourses((prev) =>
+        prev.map((course) =>
+          course.id === selectedCourse.id
+            ? { ...updatedFormData, id: course.id }
+            : course
+        )
+      );
+    } else {
+      setCourses([...courses, { ...updatedFormData, id: Date.now() }]);
+    }
     clearForm();
   };
 
@@ -88,10 +105,10 @@ function ManageCoursesForm() {
       courseNumber: "",
       courseCode: "",
       courseTitle: "",
-      description: "",
+      courseDescription: "",
       keywords: [],
     });
-
+    setSelectedCourse(null);
     const modal = document.getElementById("courseModal");
     if (modal) {
       const bsModal = window.bootstrap.Modal.getInstance(modal);
@@ -101,24 +118,46 @@ function ManageCoursesForm() {
     }
   };
 
+  const handleDelete = () => {
+    if (selectedCourse) {
+      setCourses((prev) =>
+        prev.filter((course) => course.id !== selectedCourse.id)
+      );
+      clearForm();
+    }
+  };
+
   const filteredCourses = courses.filter((course) =>
     course.courseTitle.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDeleteCourse = () => {
-    setCourses(
-      courses.filter((course) => course.courseCode !== formData.courseCode)
-    );
-    setShowConfirmation(false);
-    clearForm();
+  const handleEdit = () => {
+    const modal = document.getElementById("courseModal");
+    if (modal) {
+      const bsModal = window.bootstrap.Modal.getInstance(modal);
+      if (bsModal) {
+        bsModal.hide();
+      }
+    }
+    document
+      .getElementById("section1Form")
+      .scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleCourseNumberChange = (e) => {
+    const value = e.target.value;
+    const isValid = /^[1-7][0-9]{2}$/.test(value) || value === "";
+    if (isValid) {
+      setFormData({ ...formData, courseNumber: value });
+    }
   };
 
   return (
     <div className="py-5 bg-light">
       <div className="container mt-5">
         {/* Section 1: Form */}
-        <div className="p-4 mb-4 shadow-sm bg-white rounded">
-          <h2 className="text-primary">Manage Courses</h2>
+        <div id="section1Form" className="p-4 mb-4 shadow-sm bg-white rounded">
+          <h2 className="text-primary">Manage Course</h2>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -134,7 +173,7 @@ function ManageCoursesForm() {
                 onChange={handleInputChange}
                 required
               >
-                <option value="">Select Department Code</option>
+                <option value="">Select</option>
                 {departmentCodes.map((code) => (
                   <option key={code} value={code}>
                     {code}
@@ -143,11 +182,10 @@ function ManageCoursesForm() {
               </select>
               <label htmlFor="departmentCode">Department Code</label>
             </div>
-
             <div className="form-floating mb-3">
               <input
-                type="text"
-                list="courseNumberList"
+                type="number"
+                list="courseNumbers"
                 className="form-control"
                 id="courseNumber"
                 name="courseNumber"
@@ -156,27 +194,14 @@ function ManageCoursesForm() {
                 placeholder="Course Number"
                 required
               />
-              <datalist id="courseNumberList">
-                {courseNumbers.map((number) => (
-                  <option key={number} value={number} />
+
+              <datalist id="courseNumbers">
+                {courseNumbers.map((num) => (
+                  <option key={num} value={num} />
                 ))}
               </datalist>
               <label htmlFor="courseNumber">Course Number</label>
             </div>
-
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                className="form-control"
-                id="courseCode"
-                name="courseCode"
-                value={formData.courseCode}
-                readOnly
-                placeholder="Course Code"
-              />
-              <label htmlFor="courseCode">Course Code</label>
-            </div>
-
             <div className="form-floating mb-3">
               <input
                 type="text"
@@ -190,21 +215,18 @@ function ManageCoursesForm() {
               />
               <label htmlFor="courseTitle">Course Title</label>
             </div>
-
             <div className="form-floating mb-3">
               <textarea
                 className="form-control"
-                id="description"
-                name="description"
-                value={formData.description}
+                id="courseDescription"
+                name="courseDescription"
+                value={formData.courseDescription}
                 onChange={handleInputChange}
-                placeholder="Description"
-                style={{ height: "100px" }}
+                placeholder="Course Description"
                 required
               ></textarea>
-              <label htmlFor="description">Description</label>
+              <label htmlFor="courseDescription">Course Description</label>
             </div>
-
             <div className="mb-3">
               <label className="form-label">Keywords</label>
               <div className="d-flex">
@@ -213,7 +235,7 @@ function ManageCoursesForm() {
                   className="form-control me-2"
                   value={keywordInput}
                   onChange={(e) => setKeywordInput(e.target.value)}
-                  placeholder="Enter a keyword"
+                  placeholder="Add a keyword"
                 />
                 <button
                   type="button"
@@ -224,58 +246,68 @@ function ManageCoursesForm() {
                 </button>
               </div>
               <div className="mt-2">
-                {formData.keywords.map((keyword, idx) => (
-                  <span
-                    key={idx}
-                    className="badge bg-secondary me-2"
-                    onClick={() => handleKeywordRemove(keyword)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {keyword} &times;
+                {formData.keywords.map((keyword, index) => (
+                  <span key={index} className="badge bg-secondary me-2">
+                    {keyword}{" "}
+                    <button
+                      type="button"
+                      className="btn-close btn-close-white ms-2"
+                      aria-label="Remove"
+                      onClick={() => handleKeywordRemove(keyword)}
+                    ></button>
                   </span>
                 ))}
               </div>
             </div>
+            {/* <button type="submit" className="btn btn-primary">
+              {selectedCourse ? "Update Course" : "Save Course"}
+            </button> */}
             <div className="mt-3">
               <button type="submit" className="btn btn-primary">
-                Save Course
+                {selectedCourse ? "Update Course" : "Save Course"}
               </button>
+              {selectedCourse && (
+                <button
+                  type="button"
+                  className="btn btn-secondary ms-2"
+                  onClick={clearForm}
+                >
+                  Cancel
+                </button>
+              )}
             </div>
           </form>
         </div>
 
         {/* Section 2: Table */}
         <div className="p-4 mb-4 shadow-sm bg-white rounded">
-          <h2 className="text-primary">Course List</h2>
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search courses..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          <table className="table table-bordered table-hover">
-            <thead className="table-light">
+          <h3 className="text-primary">Courses List</h3>
+          <input
+            type="text"
+            className="form-control mb-3"
+            placeholder="Search courses by title"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <table className="table table-bordered">
+            <thead>
               <tr>
                 <th>Course Code</th>
-                <th>Title</th>
+                <th>Course Title</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredCourses.map((course) => (
-                <tr key={course.courseCode}>
+                <tr key={course.id}>
                   <td>{course.courseCode}</td>
                   <td>{course.courseTitle}</td>
                   <td>
                     <button
-                      className="btn btn-primary btn-sm"
+                      className="btn btn-primary"
                       data-bs-toggle="modal"
                       data-bs-target="#courseModal"
-                      onClick={() => setFormData(course)}
+                      onClick={() => setSelectedCourse(course)}
                     >
                       View
                     </button>
@@ -308,78 +340,39 @@ function ManageCoursesForm() {
                 ></button>
               </div>
               <div className="modal-body">
-                <p>
-                  <strong>Course Code:</strong> {formData.courseCode}
-                </p>
-                <p>
-                  <strong>Title:</strong> {formData.courseTitle}
-                </p>
-                <p>
-                  <strong>Description:</strong> {formData.description}
-                </p>
-                <p>
-                  <strong>Keywords:</strong> {formData.keywords.join(", ")}
-                </p>
+                {selectedCourse && (
+                  <>
+                    <p>
+                      <strong>Course Code:</strong> {selectedCourse.courseCode}
+                    </p>
+                    <p>
+                      <strong>Title:</strong> {selectedCourse.courseTitle}
+                    </p>
+                    <p>
+                      <strong>Description:</strong>{" "}
+                      {selectedCourse.courseDescription}
+                    </p>
+                    <p>
+                      <strong>Keywords:</strong>{" "}
+                      {selectedCourse.keywords.join(", ")}
+                    </p>
+                  </>
+                )}
               </div>
               <div className="modal-footer">
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={() => setShowConfirmation(true)}
+                  onClick={handleDelete}
                 >
                   Delete
                 </button>
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => clearForm()}
+                  onClick={handleEdit}
                 >
                   Edit
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Confirmation Modal */}
-        <div
-          className="modal fade"
-          id="deleteConfirmationModal"
-          tabIndex="-1"
-          aria-labelledby="deleteConfirmationModalLabel"
-          aria-hidden="true"
-          style={{ display: showConfirmation ? "block" : "none" }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="deleteConfirmationModalLabel">
-                  Confirm Delete
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  onClick={() => setShowConfirmation(false)}
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body">
-                Are you sure you want to delete this course?
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={() => setShowConfirmation(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={handleDeleteCourse}
-                >
-                  Delete
                 </button>
               </div>
             </div>
