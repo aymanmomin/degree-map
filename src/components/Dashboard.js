@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import SummaryCard from "./SummaryCard";
 import CourseList from "./CourseList";
 import CourseDetail from "./CourseDetail";
-import Pagination from "./Pagination";
 
 const Dashboard = () => {
   // State to manage the active course details
@@ -61,13 +60,6 @@ const Dashboard = () => {
             <div className="row">
               <CourseDetail course={activeCourseDetails} />
             </div>
-          </div>
-        </div>
-
-        {/* Section 3: Pagination */}
-        <div className="row mt-4">
-          <div className="col-md-12">
-            <Pagination />
           </div>
         </div>
       </div>
