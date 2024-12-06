@@ -21,7 +21,9 @@ const CourseList = ({ courses, activeCourse, handleCourseClick }) => {
             className={`collapse ${activeCourse === course.code ? "show" : ""}`}
           >
             <div className="card-body">
-              {course.description}
+              <p>{course.title}</p>
+              <button className="badge bg-primary rounded-pill">Complete</button>
+              <button className="badge bg-danger rounded-pill">remove</button>
             </div>
           </div>
         </div>

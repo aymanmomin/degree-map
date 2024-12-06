@@ -25,7 +25,7 @@ const Dashboard = () => {
     },
     {
       code: "CPSC 251",
-      title: "Discrete Structures",
+      title: "Theoretical Foundations of Computer Science I",
       description: "Proof techniques. Recursion and iteration. Specification of algorithmic problems and fundamental proof techniques in Computer Science. Discrete structures such as graphs, trees, strings, functions, and their computer representation. Counting, permutations. Random events. Conditional events. Applications in Computer Science.",
       units: 3,
       taken: false,
