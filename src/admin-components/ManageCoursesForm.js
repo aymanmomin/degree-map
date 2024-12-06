@@ -1,31 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { getAllCourses } from "../api/coursesApi";
 
 function ManageCoursesForm() {
-  const [courses, setCourses] = useState([
-    {
-      id: 1,
-      departmentCode: "CPSC",
-      courseNumber: "471",
-      courseCode: "CPSC 471",
-      courseTitle: "DBMS",
-      courseDescription: "Database Management Systems",
-      keywords: ["DBMS", "Database"],
-    },
-    {
-      id: 2,
-      departmentCode: "CPSC",
-      courseNumber: "481",
-      courseCode: "CPSC 481",
-      courseTitle: "HCI",
-      courseDescription: "Human-Computer Interaction",
-      keywords: ["HCI", "UI/UX", "Human Computer"],
-    },
-  ]);
+  const [courses, setCourses] = useState([]);
 
   const [formData, setFormData] = useState({
+    courseCode: "",
     departmentCode: "",
     courseNumber: "",
-    courseCode: "",
     courseTitle: "",
     courseDescription: "",
     keywords: [],
@@ -41,10 +23,35 @@ function ManageCoursesForm() {
   );
 
   useEffect(() => {
+    //fetch courses from the backend 
+    const fetchCourses = async () => {
+      try {
+        const data = await getAllCourses(); //  API function
+        console.log("Fetched courses:", data);
+        setCourses(data); //update state with courses
+        console.log("Courses:", courses);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+  
+    fetchCourses();
+  }, [courses]);
+
+  useEffect(() => {
     if (selectedCourse) {
       setFormData(selectedCourse);
     }
   }, [selectedCourse]);
+
+  const formattedCourses = courses.map((course) => ({
+    courseCode: course.CourseCode || "", //map backend CourseCode to frontend courseCode
+    departmentCode: course.DepartmentCode || "", //map DepartmentCode to departmentCode
+    courseNumber: course.CourseNumber || "", //map CourseNumber to courseNumber
+    courseTitle: course.Title || "", //map Title to courseTitle
+    courseDescription: course.Description || "", //map Description to courseDescription
+    keywords: course.Keywords ? course.Keywords.split(",") : [], //split Keywords into an array
+  }));
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -127,7 +134,7 @@ function ManageCoursesForm() {
     }
   };
 
-  const filteredCourses = courses.filter((course) =>
+  const filteredCourses = formattedCourses.filter((course) =>
     course.courseTitle.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
