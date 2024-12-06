@@ -1,8 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAllCourses } from "../api/coursesApi";
 
 export default function Dashboard() {
-  // State to manage the active course details
-  const [activeCourse, setActiveCourse] = useState("CPSC 233");
+
+  
+  //state to manage the active course details
+  const [activeCourse, setActiveCourse] = useState(null); //no default course
+  const [courses, setCourses] = useState([]); //database courses 
+
+  useEffect(() => {
+    //fetch courses from the backend 
+    const fetchCourses = async () => {
+      try {
+        const data = await getAllCourses(); //  API function
+        console.log("Fetched courses:", data);
+        setCourses(data); //update state with courses
+        console.log("Courses:", courses);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+  
+    fetchCourses();
+  }, [courses]);
 
   // Function to handle course card click
   const handleCourseClick = (course) => {
@@ -52,28 +72,30 @@ export default function Dashboard() {
         <div className="row mt-4">
           <div className="col-md-2">
             <div id="card-738138">
-              <div className="card">
+              {courses.map((course) => (
+              <div className="card" key={course.courseCode}>
                 <div className="card-header">
                   <a
-                    className={`card-link ${activeCourse === "CPSC 231" ? "" : "collapsed"}`}
+                    className={`card-link ${activeCourse === course.courseCode ? "" : "collapsed"}`}
                     data-toggle="collapse"
                     data-parent="#card-738138"
-                    href="#card-element-557355"
-                    onClick={() => handleCourseClick("CPSC 231")}
+                    href={`#card-element-${course.courseCode}`}
+                    onClick={() => handleCourseClick(course.courseCode)}
                   >
-                    CPSC 231
+                    {course.Title}
                   </a>
                 </div>
-                <div
-                  id="card-element-557355"
-                  className={`collapse ${activeCourse === "CPSC 231" ? "show" : ""}`}
+                  <div
+                  id={`card-element-${course.courseCode}`}
+                  className={`collapse ${activeCourse === course.courseCode ? "show" : ""}`}
                 >
                   <div className="card-body">
-                    Year 1...
+                    {course.DepartmentCode}
                   </div>
                 </div>
               </div>
-              <div className="card">
+              ))}
+              {/* <div className="card">
                 <div className="card-header">
                   <a
                     className={`card-link ${activeCourse === "CPSC 233" ? "" : "collapsed"}`}
@@ -114,9 +136,9 @@ export default function Dashboard() {
                     Year 1...
                   </div>
                 </div>
-              </div>
+              </div>*/}
             </div>
-          </div>
+          </div> 
           <div className="col-md-10">
             <div className="row">
               <div className="col-md-4">
