@@ -1,22 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { getAllInstructors } from "../api/instructorsApi";
 
 function ManageInstructorForm() {
-  const [instructors, setInstructors] = useState([
-    {
-      id: 1,
-      firstName: "John",
-      lastName: "Doe",
-      email: "john.doe@example.com",
-      teaches: ["CPSC 471", "CPSC 481"],
-    },
-    {
-      id: 2,
-      firstName: "Jane",
-      lastName: "Smith",
-      email: "jane.smith@example.com",
-      teaches: ["CPSC 472"],
-    },
-  ]);
+  const [instructors, setInstructors] = useState([]);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -30,10 +16,35 @@ function ManageInstructorForm() {
   const [courseInput, setCourseInput] = useState("");
 
   useEffect(() => {
+    //fetch instructors from the backend 
+    const fetchInstructors = async () => {
+      try {
+        const data = await getAllInstructors(); //  API function
+        console.log("Fetched instructors:", data);
+        setInstructors(data); //update state with courses
+        console.log("instructors:", instructors);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+
+    fetchInstructors();
+  }, [instructors]);
+
+  useEffect(() => {
     if (selectedInstructor) {
       setFormData(selectedInstructor);
     }
   }, [selectedInstructor]);
+
+  const formattedInstructors = instructors.map((instructor) => ({
+    id: instructor.EmployeeID || "", //map EmployeeID to id
+    firstName: instructor.GivenName || "", //map GivenName to firstName
+    lastName: instructor.LastName || "", //map LastName to lastName
+    email: instructor.Email || "", //map Email to email
+    teaches: [], //leave  teaches empty for now
+  }));
+  console.log("formatted instructors:", formattedInstructors);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -109,7 +120,7 @@ function ManageInstructorForm() {
     }
   };
 
-  const filteredInstructors = instructors.filter(
+  const filteredInstructors = formattedInstructors.filter(
     (instructor) =>
       instructor.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       instructor.lastName.toLowerCase().includes(searchTerm.toLowerCase())

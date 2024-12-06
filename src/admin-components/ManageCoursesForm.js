@@ -17,7 +17,7 @@ function ManageCoursesForm() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [keywordInput, setKeywordInput] = useState("");
 
-  const departmentCodes = ["CPSC", "SENG", "FREN", "ECON", "MATH", "PHYS"];
+  const departmentCodes = ["CPSC", "SENG", "DATA", "FREN", "ECON", "MATH", "PHYS"];
   const courseNumbers = Array.from({ length: 700 }, (_, i) =>
     (100 + i).toString()
   );
@@ -50,7 +50,7 @@ function ManageCoursesForm() {
     courseNumber: course.CourseNumber || "", //map CourseNumber to courseNumber
     courseTitle: course.Title || "", //map Title to courseTitle
     courseDescription: course.Description || "", //map Description to courseDescription
-    keywords: course.Keywords ? course.Keywords.split(",") : [], //split Keywords into an array
+    keywords: course.Keywords ? course.Keywords.split(",") : [], //get keywords string into array
   }));
 
   const handleInputChange = (e) => {
