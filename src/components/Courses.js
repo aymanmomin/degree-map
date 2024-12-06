@@ -24,7 +24,7 @@ export default function Courses() {
     },
     {
       code: "CPSC 251",
-      title: "Discrete Structures",
+      title: "Theoretical Foundations of Computer Science I",
       description: "Proof techniques. Recursion and iteration. Specification of algorithmic problems and fundamental proof techniques in Computer Science. Discrete structures such as graphs, trees, strings, functions, and their computer representation. Counting, permutations. Random events. Conditional events. Applications in Computer Science.",
       units: 3,
       taken: false,
@@ -125,27 +125,7 @@ export default function Courses() {
                 Show more
               </a>
             </div>
-
-            {/* Pagination */}
-            <nav aria-label="Page navigation example">
-              <ul className="pagination">
-                <li className="page-item">
-                  <a className="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span className="sr-only">Previous</span>
-                  </a>
-                </li>
-                <li className="page-item"><a className="page-link" href="#">1</a></li>
-                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                <li className="page-item">
-                  <a className="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span className="sr-only">Next</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          </div>  
         </div>
       </div>
     </div>
