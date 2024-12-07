@@ -27,7 +27,7 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-              <Link className="nav-link" to="/courses">
+                <Link className="nav-link" to="/courses">
                   Course Catalogue
                 </Link>
               </li>
@@ -63,7 +63,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/manage-interests">
-                      Mange Interests
+                      Manage Interests
                     </Link>
                   </li>
                   <li>
