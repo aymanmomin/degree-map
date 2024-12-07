@@ -1,26 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { deleteProgram, getAllPrograms } from "../api/programsApi";
 
 function ManageProgramsForm() {
-  const [programs, setPrograms] = useState([
-    {
-      id: 1,
-      programName: "Computer Science",
-      programDescription: "Study of computing and programming.",
-      programType: "Bachelors",
-      requiredUnits: 120,
-      faculty: "Science",
-    },
-    {
-      id: 2,
-      programName: "Business Administration",
-      programDescription: "Fundamentals of business and management.",
-      programType: "Masters",
-      requiredUnits: 60,
-      faculty: "Business",
-    },
-  ]);
-
+  const [programs, setPrograms] = useState([]);
   const [formData, setFormData] = useState({
+    programID: "",
     programName: "",
     programDescription: "",
     programType: "",
@@ -43,9 +27,34 @@ function ManageProgramsForm() {
   const requiredUnitsOptions = [30, 60, 120, 150];
   // Add this inside the component, before rendering the table
 
-  const filteredPrograms = programs.filter((program) =>
+  useEffect(() => {
+    //fetch courses from the backend 
+    const fetchPrograms = async () => {
+      try {
+        const data = await getAllPrograms(); //API function
+        console.log("Fetched programs:", data);
+        setPrograms(data); //update state with courses
+        console.log("programs:", programs);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+  
+    fetchPrograms();
+  }, [programs]);
+
+  const formattedPrograms = programs.map((program) => ({
+    programName: program.Name || "", //map "Name" to "programName"
+    programDescription: program.Description || "", //map "Description" to "programDescription"
+    programType: program.Type || "", //map "Type" to "programType"
+    requiredUnits: program.RequiredUnits || "", //map "RequiredUnits" to "requiredUnits"
+    faculty: program.OfferedByFaculty || "", //map "OfferedByFaculty" to "faculty"
+  }));
+
+  const filteredPrograms = formattedPrograms.filter((program) =>
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
 
   useEffect(() => {
     // Reset modal form data when a program is selected
@@ -91,6 +100,7 @@ function ManageProgramsForm() {
 
   const clearForm = () => {
     setFormData({
+      programID: "",
       programName: "",
       programDescription: "",
       programType: "",
@@ -108,15 +118,24 @@ function ManageProgramsForm() {
     }
   };
 
-  const handleDeleteProgram = () => {
-    // Filter out the deleted program
-    setPrograms(programs.filter((program) => program !== selectedProgram));
-    setShowConfirmation(false);
-
-    // Close the program details modal using Bootstrap JS
-    const programModal = document.getElementById("programModal");
-    const modalInstance = window.bootstrap.Modal.getInstance(programModal);
-    modalInstance.hide(); // Close the modal
+  const handleDeleteProgram = async () => {
+    try {
+      //send DELETE request to backend
+      console.log(`Deleting program at /api/programs/${selectedProgram.programID}`);
+      await deleteProgram(`/api/programsApi/${selectedProgram.programID}`);
+  
+      //filter out the deleted program in the frontend
+      setPrograms(programs.filter((program) => program.programID !== selectedProgram.programID));
+      setShowConfirmation(false);
+  
+      //close the program details modal using Bootstrap JS
+      const programModal = document.getElementById("programModal");
+      const modalInstance = window.bootstrap.Modal.getInstance(programModal);
+      modalInstance.hide(); //close the modal
+    } catch (error) {
+      console.error("Error deleting program:", error);
+      alert("Failed to delete the program. Please try again.");
+    }
   };
 
   return (
@@ -260,7 +279,7 @@ function ManageProgramsForm() {
             </thead>
             <tbody>
               {filteredPrograms.map((program) => (
-                <tr key={program.id}>
+                <tr key={program.programID}>
                   <td>{program.programName}</td>
                   <td>{program.programType}</td>
                   <td>{program.faculty}</td>
