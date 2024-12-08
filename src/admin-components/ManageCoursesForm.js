@@ -36,7 +36,7 @@ function ManageCoursesForm() {
     };
   
     fetchCourses();
-  }, [courses]);
+  }, []);
 
   useEffect(() => {
     if (selectedCourse) {
@@ -93,7 +93,7 @@ function ManageCoursesForm() {
       if (selectedCourse) {
         //update an existing course
         const response = await updateCourse(
-          `/api/courses/${selectedCourse.courseCode}`,
+          `${selectedCourse.courseCode}`,
           formData
         );
         console.log("Course updated:", response.data);
@@ -138,7 +138,7 @@ function ManageCoursesForm() {
     if (!selectedCourse) return;
   
     try {
-      await deleteCourse(`/api/courses/${selectedCourse.courseCode}`);
+      await deleteCourse(`${selectedCourse.courseCode}`);
       console.log("Course deleted successfully.");
       setCourses((prev) =>
         prev.filter((course) => course.courseCode !== selectedCourse.courseCode)
