@@ -146,7 +146,7 @@ function ManageProgramsForm() {
     try {
       //send DELETE request to backend
       console.log("Selected Program ID:", selectedProgram.id);
-      await deleteProgram(`/api/programs/${selectedProgram.id}`);
+      await deleteProgram(`${selectedProgram.id}`);
   
       //filter out the deleted program in the frontend
       setPrograms(programs.filter((program) => program.id !== selectedProgram.id));
