@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ onLogout }) {
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-dark  " data-bs-theme="dark">
@@ -27,7 +27,7 @@ export default function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-              <Link className="nav-link" to="/courses">
+                <Link className="nav-link" to="/courses">
                   Course Catalogue
                 </Link>
               </li>
@@ -63,16 +63,16 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/manage-interests">
-                      Mange Interests
+                      Manage Interests
                     </Link>
                   </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <button className="dropdown-item" onClick={onLogout}>
                       Sign Out
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </div>

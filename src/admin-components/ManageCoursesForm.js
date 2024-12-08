@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getAllCourses } from "../api/coursesApi";
+import { createCourse, deleteCourse, getAllCourses, updateCourse } from "../api/coursesApi";
 
 function ManageCoursesForm() {
   const [courses, setCourses] = useState([]);
@@ -26,7 +26,7 @@ function ManageCoursesForm() {
     //fetch courses from the backend 
     const fetchCourses = async () => {
       try {
-        const data = await getAllCourses(); //  API function
+        const data = await getAllCourses(); //API function
         console.log("Fetched courses:", data);
         setCourses(data); //update state with courses
         console.log("Courses:", courses);
@@ -75,7 +75,7 @@ function ManageCoursesForm() {
     });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const courseNumberInt = parseInt(formData.courseNumber, 10);
     if (
       !formData.departmentCode ||
@@ -89,21 +89,30 @@ function ManageCoursesForm() {
       return;
     }
 
-    const courseCode = `${formData.departmentCode} ${formData.courseNumber}`;
-    const updatedFormData = { ...formData, courseCode };
-
-    if (selectedCourse) {
-      setCourses((prev) =>
-        prev.map((course) =>
-          course.id === selectedCourse.id
-            ? { ...updatedFormData, id: course.id }
-            : course
-        )
-      );
-    } else {
-      setCourses([...courses, { ...updatedFormData, id: Date.now() }]);
+    try {
+      if (selectedCourse) {
+        //update an existing course
+        const response = await updateCourse(
+          `/api/courses/${selectedCourse.courseCode}`,
+          formData
+        );
+        console.log("Course updated:", response.data);
+        setCourses((prev) =>
+          prev.map((course) =>
+            course.courseCode === selectedCourse.courseCode ? response.data : course
+          )
+        );
+      } else {
+        //add a new course
+        const response = await createCourse("/api/courses", formData);
+        console.log("Course created:", response.data);
+        setCourses([...courses, response.data]);
+      }
+      clearForm();
+    } catch (error) {
+      console.error("Error saving course:", error);
+      alert("Failed to save the course. Please try again.");
     }
-    clearForm();
   };
 
   const clearForm = () => {
@@ -125,12 +134,19 @@ function ManageCoursesForm() {
     }
   };
 
-  const handleDelete = () => {
-    if (selectedCourse) {
+  const handleDelete = async () => {
+    if (!selectedCourse) return;
+  
+    try {
+      await deleteCourse(`/api/courses/${selectedCourse.courseCode}`);
+      console.log("Course deleted successfully.");
       setCourses((prev) =>
-        prev.filter((course) => course.id !== selectedCourse.id)
+        prev.filter((course) => course.courseCode !== selectedCourse.courseCode)
       );
       clearForm();
+    } catch (error) {
+      console.error("Error deleting course:", error);
+      alert("Failed to delete the course. Please try again.");
     }
   };
 

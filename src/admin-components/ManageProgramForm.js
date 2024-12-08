@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { deleteProgram, getAllPrograms } from "../api/programsApi";
+import { createProgram, deleteProgram, getAllPrograms, updateProgram } from "../api/programsApi";
 
 function ManageProgramsForm() {
   const [programs, setPrograms] = useState([]);
   const [formData, setFormData] = useState({
-    programID: "",
+    id: "",
     programName: "",
     programDescription: "",
     programType: "",
@@ -32,9 +32,8 @@ function ManageProgramsForm() {
     const fetchPrograms = async () => {
       try {
         const data = await getAllPrograms(); //API function
-        console.log("Fetched programs:", data);
         setPrograms(data); //update state with courses
-        console.log("programs:", programs);
+        
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
@@ -44,6 +43,7 @@ function ManageProgramsForm() {
   }, [programs]);
 
   const formattedPrograms = programs.map((program) => ({
+    id: program.programID || "", 
     programName: program.Name || "", //map "Name" to "programName"
     programDescription: program.Description || "", //map "Description" to "programDescription"
     programType: program.Type || "", //map "Type" to "programType"
@@ -59,6 +59,7 @@ function ManageProgramsForm() {
   useEffect(() => {
     // Reset modal form data when a program is selected
     if (selectedProgram) {
+      console.log("Selected Program ID:", selectedProgram.id);
       setFormData(selectedProgram);
     }
   }, [selectedProgram]);
@@ -70,6 +71,7 @@ function ManageProgramsForm() {
 
   const validateForm = () => {
     return (
+      formData.id &&
       formData.programName &&
       formData.programDescription &&
       formData.programType &&
@@ -78,24 +80,45 @@ function ManageProgramsForm() {
     );
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validateForm()) {
       alert("Please fill out all fields.");
       return;
     }
-
-    if (selectedProgram) {
-      setPrograms((prev) =>
-        prev.map((program) =>
-          program.id === selectedProgram.id
-            ? { ...formData, id: program.id }
-            : program
-        )
-      );
-    } else {
-      setPrograms([...programs, { ...formData, id: Date.now() }]);
+  
+    try {
+      if (selectedProgram) {
+        //update an existing program
+        console.log("Sending PUT request:", {
+          url: `/api/programs/${selectedProgram.id}`,
+          data: formData,
+        });
+        const response = await updateProgram(
+          `/api/programs/${selectedProgram.id}`, //backend expects ProgramID as :id
+          formData
+        );
+        console.log("Program updated:", response.data);
+  
+        //update state with the updated program
+        setPrograms((prev) =>
+          prev.map((program) =>
+            program.id === selectedProgram.id ? response.data : program
+          )
+        );
+      } else {
+        //create a new program
+        const response = await createProgram("/api/programs", formData);
+        console.log("Program created:", response.data);
+  
+        //add the new program to the state
+        setPrograms([...programs, response.data]);
+      }
+  
+      clearForm();
+    } catch (error) {
+      console.error("Error saving program:", error);
+      alert("Failed to save the program. Please try again.");
     }
-    clearForm();
   };
 
   const clearForm = () => {
@@ -121,11 +144,11 @@ function ManageProgramsForm() {
   const handleDeleteProgram = async () => {
     try {
       //send DELETE request to backend
-      console.log(`Deleting program at /api/programs/${selectedProgram.programID}`);
-      await deleteProgram(`/api/programsApi/${selectedProgram.programID}`);
+      console.log("Selected Program ID:", selectedProgram.id);
+      await deleteProgram(`/api/programsApi/${selectedProgram.id}`);
   
       //filter out the deleted program in the frontend
-      setPrograms(programs.filter((program) => program.programID !== selectedProgram.programID));
+      setPrograms(programs.filter((program) => program.id !== selectedProgram.id));
       setShowConfirmation(false);
   
       //close the program details modal using Bootstrap JS
