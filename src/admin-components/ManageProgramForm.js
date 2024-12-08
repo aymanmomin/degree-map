@@ -32,6 +32,7 @@ function ManageProgramsForm() {
     const fetchPrograms = async () => {
       try {
         const data = await getAllPrograms(); //API function
+        console.log("Fetched programs:", data);
         setPrograms(data); //update state with courses
         
       } catch (error) {
@@ -40,10 +41,10 @@ function ManageProgramsForm() {
     };
   
     fetchPrograms();
-  }, [programs]);
+  }, []);
 
   const formattedPrograms = programs.map((program) => ({
-    id: program.programID || "", 
+    id: program.ProgramID || "", 
     programName: program.Name || "", //map "Name" to "programName"
     programDescription: program.Description || "", //map "Description" to "programDescription"
     programType: program.Type || "", //map "Type" to "programType"
@@ -59,7 +60,7 @@ function ManageProgramsForm() {
   useEffect(() => {
     // Reset modal form data when a program is selected
     if (selectedProgram) {
-      console.log("Selected Program ID:", selectedProgram.id);
+      console.log("Selected Program ID:", selectedProgram);
       setFormData(selectedProgram);
     }
   }, [selectedProgram]);
@@ -94,7 +95,7 @@ function ManageProgramsForm() {
           data: formData,
         });
         const response = await updateProgram(
-          `/api/programs/${selectedProgram.id}`, //backend expects ProgramID as :id
+          selectedProgram.id, //backend expects ProgramID as :id
           formData
         );
         console.log("Program updated:", response.data);
@@ -107,7 +108,7 @@ function ManageProgramsForm() {
         );
       } else {
         //create a new program
-        const response = await createProgram("/api/programs", formData);
+        const response = await createProgram(formData);
         console.log("Program created:", response.data);
   
         //add the new program to the state
@@ -123,7 +124,7 @@ function ManageProgramsForm() {
 
   const clearForm = () => {
     setFormData({
-      programID: "",
+      id: "",
       programName: "",
       programDescription: "",
       programType: "",
@@ -145,7 +146,7 @@ function ManageProgramsForm() {
     try {
       //send DELETE request to backend
       console.log("Selected Program ID:", selectedProgram.id);
-      await deleteProgram(`/api/programsApi/${selectedProgram.id}`);
+      await deleteProgram(`/api/programs/${selectedProgram.id}`);
   
       //filter out the deleted program in the frontend
       setPrograms(programs.filter((program) => program.id !== selectedProgram.id));
@@ -302,7 +303,7 @@ function ManageProgramsForm() {
             </thead>
             <tbody>
               {filteredPrograms.map((program) => (
-                <tr key={program.programID}>
+                <tr key={program.id}>
                   <td>{program.programName}</td>
                   <td>{program.programType}</td>
                   <td>{program.faculty}</td>
@@ -344,6 +345,9 @@ function ManageProgramsForm() {
                 ></button>
               </div>
               <div className="modal-body">
+                <p>
+                  <strong>Program Id:</strong> {formData.id}
+                </p>
                 <p>
                   <strong>Program Name:</strong> {formData.programName}
                 </p>
