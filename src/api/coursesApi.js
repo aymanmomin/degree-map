@@ -16,6 +16,7 @@ export const getAllCourses = async () => {
 //create a new course
 export const createCourse = async (courseData) => {
   try {
+    console.log(courseData);
     const response = await axios.post(BASE_URL, courseData);
     return response.data;
   } catch (error) {

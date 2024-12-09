@@ -38,11 +38,10 @@ function ManageInstructorForm() {
   }, [selectedInstructor]);
 
   const formattedInstructors = instructors.map((instructor) => ({
-    id: instructor.EmployeeID || "", //map EmployeeID to id
     firstName: instructor.GivenName || "", //map GivenName to firstName
     lastName: instructor.LastName || "", //map LastName to lastName
     email: instructor.Email || "", //map Email to email
-    teaches: [], //leave  teaches empty for now
+    teaches: instructor.Teaches, //leave  teaches empty for now
   }));
   console.log("formatted instructors:", formattedInstructors);
 

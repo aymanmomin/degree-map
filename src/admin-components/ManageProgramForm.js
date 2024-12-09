@@ -48,16 +48,16 @@ function ManageProgramsForm() {
     fetchPrograms();
   }, []);
 
-  const formattedPrograms = programs.map((program) => ({
-    id: program.ProgramID || "",
-    programName: program.Name || "", //map "Name" to "programName"
-    programDescription: program.Description || "", //map "Description" to "programDescription"
-    programType: program.Type || "", //map "Type" to "programType"
-    requiredUnits: program.RequiredUnits || "", //map "RequiredUnits" to "requiredUnits"
-    faculty: program.OfferedByFaculty || "", //map "OfferedByFaculty" to "faculty"
-  }));
+  // const formattedPrograms = programs.map((program) => ({
+  //   id: program.ProgramID || "",
+  //   programName: program.Name || "", //map "Name" to "programName"
+  //   programDescription: program.Description || "", //map "Description" to "programDescription"
+  //   programType: program.Type || "", //map "Type" to "programType"
+  //   requiredUnits: program.RequiredUnits || "", //map "RequiredUnits" to "requiredUnits"
+  //   faculty: program.OfferedByFaculty || "", //map "OfferedByFaculty" to "faculty"
+  // }));
 
-  const filteredPrograms = formattedPrograms.filter((program) =>
+  const filteredPrograms = programs.filter((program) =>
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
