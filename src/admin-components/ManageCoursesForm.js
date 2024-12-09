@@ -5,10 +5,11 @@ import {
   getAllCourses,
   updateCourse,
 } from "../api/coursesApi";
+import {getAllDepartments} from "../api/departmentsApi";
 
 function ManageCoursesForm() {
   const [courses, setCourses] = useState([]);
-
+  const [departments, setDepartments] = useState([]);
   const [formData, setFormData] = useState({
     departmentCode: "",
     courseNumber: "",
@@ -35,20 +36,35 @@ function ManageCoursesForm() {
     (100 + i).toString()
   );
 
-  useEffect(() => {
-    //fetch courses from the backend
-    const fetchCourses = async () => {
-      try {
-        const data = await getAllCourses(); //API function
-        console.log("Fetched courses:", data);
-        setCourses(data); //update state with courses
-        console.log("Courses:", courses);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      }
-    };
+  const [message, setMessage] = useState(null);
 
+const showMessage = (text, type = "success") => {
+  setMessage({ text, type });
+  setTimeout(() => setMessage(null), 3000); // Auto-hide after 3 seconds
+};
+
+const fetchDepartments = async () => {
+  try {
+    const data = await getAllDepartments(); // API function
+    setDepartments(data);
+  } catch (error) {
+    console.error("Error fetching departments:", error);
+  }
+};
+
+  const fetchCourses = async () => {
+    try {
+      const data = await getAllCourses(); // API function
+      setCourses(data);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+    }
+  };
+  
+
+  useEffect(() => {
     fetchCourses();
+    fetchDepartments();
   }, []);
 
   useEffect(() => {
@@ -64,14 +80,6 @@ function ManageCoursesForm() {
     }
   }, [selectedCourse]);
 
-  // const formattedCourses = courses.map((course) => ({
-  //   courseCode: course.CourseCode || "", //map backend CourseCode to frontend courseCode
-  //   departmentCode: course.DepartmentCode || "", //map DepartmentCode to departmentCode
-  //   courseNumber: course.CourseNumber || "", //map CourseNumber to courseNumber
-  //   courseTitle: course.Title || "", //map Title to courseTitle
-  //   courseDescription: course.Description || "", //map Description to courseDescription
-  //   keywords: course.Keywords ? course.Keywords.split(",") : [], //get keywords string into array
-  // }));
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -80,10 +88,11 @@ function ManageCoursesForm() {
       const updatedFormData = { ...prevFormData, [name]: value };
 
       if (name === "departmentCode" || name === "courseNumber") {
-        updatedFormData.courseCode = `${updatedFormData.departmentCode || ""}${
-          updatedFormData.courseNumber || ""
+        updatedFormData.courseCode = `${updatedFormData.departmentCode}${
+          updatedFormData.courseNumber
         }`;
       }
+      console.log(updateCourse.courseCode);
 
       return updatedFormData;
     });
@@ -107,119 +116,52 @@ function ManageCoursesForm() {
   };
 
   const handleSave = async () => {
-    const updatedCourseCode = `${formData.departmentCode} ${formData.courseNumber}`;
-    const updatedFormData = { ...formData, courseCode: updatedCourseCode };
-
-    console.log("Department Code:", formData.departmentCode);
-    console.log("Course Title:", formData.courseTitle);
-    console.log("Course Description:", formData.courseDescription);
-    console.log("Course Number:", formData.courseNumber);
-    console.log("Course Number:", formData.courseCode);
-
+    console.log(formData);
     if (
-      !updatedFormData.departmentCode.trim() ||
-      !updatedFormData.courseTitle.trim() ||
-      !updatedFormData.courseDescription.trim() ||
-      !/^[1-7][0-9]{2}$/.test(updatedFormData.courseNumber)
+      !formData.departmentCode ||
+      !formData.courseTitle ||
+      !formData.courseDescription ||
+      !/^[1-7][0-9]{2}$/.test(formData.courseNumber)
     ) {
-      console.log("Department Code:", formData.departmentCode);
-      console.log("Course Title:", formData.courseTitle);
-      console.log("Course Description:", formData.courseDescription);
-      console.log("Course Number:", formData.courseNumber);
+    console.log(formData);
 
-      alert("Please fill out all required fields correctly.");
+      alert("Please complete all fields correctly.");
       return;
     }
-
+  
     try {
+      let response;
       if (selectedCourse) {
-        // Update existing course
-        const response = await updateCourse(
-          selectedCourse.courseCode,
-          updatedFormData
-        );
-        console.log("Course updated:", response.data);
-        setCourses((prev) =>
-          prev.map((course) =>
-            course.courseCode === selectedCourse.courseCode
-              ? response.data
-              : course
-          )
-        );
+        response = await updateCourse(selectedCourse.courseCode, {
+          ...formData,
+          keywords: formData.keywords,  // Ensure keywords are included
+        });
       } else {
-        // Create new course
-        // const response = await createCourse("/api/courses", updatedFormData);
-        const response = await createCourse(formData);
-        console.log("Course created:", response.data);
-        setCourses([...courses, response.data]);
+        response = await createCourse({
+          ...formData,
+          keywords: formData.keywords,  // Include keywords during creation
+        });
       }
-      clearForm();
+  
+      // Handle valid response
+      if (response) {
+        
+        console.log(response);
+        console.log(response.data);
+        await fetchCourses(); // Refresh data
+        clearForm();
+        alert(selectedCourse ? "Course updated successfully!" : "Course added successfully!");
+        showMessage(selectedCourse ? "Course updated successfully!" : "Course added successfully!");
+      } else {
+        throw new Error("Invalid response structure.");
+      }
     } catch (error) {
       console.error("Error saving course:", error);
-      alert("Failed to save the course. Please try again.");
+      alert("Error saving course:", error);
+      showMessage("Failed to save the course. Please try again.", "danger");
     }
   };
-
-  // const handleSave = async () => {
-  //   const courseNumberInt = parseInt(formData.courseNumber, 10);
-
-  //   // Regenerate courseCode to ensure it is correctly set
-  //   const updatedCourseCode = `${formData.departmentCode}${formData.courseNumber}`;
-  //   const updatedFormData = { ...formData, courseCode: updatedCourseCode };
-  //   // setFormData((prev) => ({ ...prev, courseCode: updatedCourseCode }));
-
-  //   console.log("Current formData:", formData);
-  //   console.log("Department Code:", formData.departmentCode);
-  //   console.log("Course Title:", formData.courseTitle);
-  //   console.log("Course Description:", formData.courseDescription);
-  //   console.log("Course Number:", formData.courseNumber);
-
-  //   if (
-  //     !updatedFormData.departmentCode.trim() ||
-  //     !updatedFormData.courseTitle.trim() ||
-  //     !updatedFormData.courseDescription.trim() ||
-  //     !/^[1-7][0-9]{2}$/.test(updatedFormData.courseNumber)
-  //   ) {
-  //     console.log("Department Code:", formData.departmentCode);
-  //     console.log("Course Title:", formData.courseTitle);
-  //     console.log("Course Description:", formData.courseDescription);
-  //     console.log("Course Number:", formData.courseNumber);
-  //     console.log("Course Number:", formData.courseCode);
-
-  //     alert("Please fill out all required fields correctly.");
-  //     return;
-  //   }
-
-  //   try {
-  //     if (selectedCourse) {
-  //       //update an existing course
-  //       const response = await updateCourse(`${selectedCourse.courseCode}`, {
-  //         ...formData,
-  //         courseCode: updatedCourseCode,
-  //       });
-  //       console.log("Course updated:", response.data);
-  //       setCourses((prev) =>
-  //         prev.map((course) =>
-  //           course.courseCode === selectedCourse.courseCode
-  //             ? response.data
-  //             : course
-  //         )
-  //       );
-  //     } else {
-  //       //add a new course
-  //       const response = await createCourse("/api/courses", {
-  //         ...formData,
-  //         courseCode: updatedCourseCode,
-  //       });
-  //       console.log("Course created:", response.data);
-  //       setCourses([...courses, response.data]);
-  //     }
-  //     clearForm();
-  //   } catch (error) {
-  //     console.error("Error saving course:", error);
-  //     alert("Failed to save the course. Please try again.");
-  //   }
-  // };
+  
 
   const clearForm = () => {
     setFormData({
@@ -243,22 +185,30 @@ function ManageCoursesForm() {
   const handleDelete = async () => {
     if (!selectedCourse) return;
 
+    // Confirmation dialog
+  const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+  if (!confirmDelete) return;
+
     try {
       await deleteCourse(`${selectedCourse.courseCode}`);
       console.log("Course deleted successfully.");
-      setCourses((prev) =>
-        prev.filter((course) => course.courseCode !== selectedCourse.courseCode)
-      );
-      clearForm();
+      await fetchCourses(); // Refresh data
+    clearForm();
+    alert("Course deleted successfully!");
     } catch (error) {
       console.error("Error deleting course:", error);
       alert("Failed to delete the course. Please try again.");
     }
   };
 
-  const filteredCourses = courses.filter((course) =>
-    course.courseTitle.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCourses = courses
+  .filter(
+    (course) =>
+      course && 
+      course.courseTitle && 
+      course.courseTitle.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
 
   const handleEdit = () => {
     const modal = document.getElementById("courseModal");
@@ -283,6 +233,12 @@ function ManageCoursesForm() {
 
   return (
     <div className="py-5 bg-light">
+      {message && (
+  <div className={`alert alert-${message.type}`} role="alert">
+    {message.text}
+  </div>
+)}
+
       <div className="container mt-5">
         {/* Section 1: Form */}
         <div id="section1Form" className="p-4 mb-4 shadow-sm bg-white rounded">
@@ -483,7 +439,12 @@ function ManageCoursesForm() {
                     </p>
                     <p>
                       <strong>Keywords:</strong>{" "}
-                      {selectedCourse.keywords.join(", ")}
+                      {/* {selectedCourse.keywords.join(", ")} */}
+                      {Array.isArray(selectedCourse.keywords) 
+                      ? selectedCourse.keywords.join(', ') 
+                        : typeof selectedCourse.keywords === 'string'
+                        ? selectedCourse.keywords
+                        : 'No keywords available'}
                     </p>
                   </>
                 )}
