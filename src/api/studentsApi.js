@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:5000/api/students'; //backend URL
 //get all students
 export const getAllStudents = async () => {
   try {
-    const response = await axios.get(BASE_URL);
+    const response = await axios.get(BASE_URL); //get request at students url to  get all 
     return response.data;
   } catch (error) {
     console.error('Error fetching students:', error);
@@ -16,7 +16,7 @@ export const getAllStudents = async () => {
 //create a new student
 export const createStudent = async (studentData) => {
   try {
-    const response = await axios.post(BASE_URL, studentData);
+    const response = await axios.post(BASE_URL, studentData);//post request to create new studnet
     return response.data;
   } catch (error) {
     console.error('Error creating student:', error);
@@ -27,7 +27,7 @@ export const createStudent = async (studentData) => {
 //update a student
 export const updateStudent = async (id, updatedData) => {
   try {
-    const response = await axios.put(`${BASE_URL}/${id}`, updatedData);
+    const response = await axios.put(`${BASE_URL}/${id}`, updatedData);//put requet for updating a student
     return response.data;
   } catch (error) {
     console.error('Error updating student:', error);

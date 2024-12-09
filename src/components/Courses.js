@@ -46,7 +46,7 @@ export default function Courses() {
     };
   
     fetchCourses();
-  }, [courses]);
+  }, []);
 
   // Filter courses based on subject code and course level
   const filteredCourses = courses.filter((course) => {

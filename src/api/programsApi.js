@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:5000/api/programs'; //backend URL
 //get all programs
 export const getAllPrograms = async () => {
   try {
-    const response = await axios.get(BASE_URL);
+    const response = await axios.get(BASE_URL);//get request at program url to  get all 
     return response.data;
   } catch (error) {
     console.error('Error fetching programs:', error);
@@ -16,7 +16,7 @@ export const getAllPrograms = async () => {
 //create a new program
 export const createProgram = async (programData) => {
   try {
-    const response = await axios.post(BASE_URL, programData);
+    const response = await axios.post(BASE_URL, programData);//post request to create newrprogram
     return response.data;
   } catch (error) {
     console.error('Error creating program:', error);
@@ -27,7 +27,7 @@ export const createProgram = async (programData) => {
 //update a program
 export const updateProgram = async (id, updatedData) => {
   try {
-    const response = await axios.put(`${BASE_URL}/${id}`, updatedData);
+    const response = await axios.put(`${BASE_URL}/${id}`, updatedData);//put requet for updating a program
     return response.data;
   } catch (error) {
     console.error('Error updating program:', error);

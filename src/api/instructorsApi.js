@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:5000/api/instructors'; // backend URL
 //get all instructors
 export const getAllInstructors = async () => {
   try {
-    const response = await axios.get(BASE_URL);
+    const response = await axios.get(BASE_URL); //get request at instructors url to  get all 
     return response.data;
   } catch (error) {
     console.error('Error fetching instructors:', error);
@@ -16,7 +16,7 @@ export const getAllInstructors = async () => {
 //create a new instructor
 export const createInstructor = async (instructorData) => {
   try {
-    const response = await axios.post(BASE_URL, instructorData);
+    const response = await axios.post(BASE_URL, instructorData);//post request to create new instructor
     return response.data;
   } catch (error) {
     console.error('Error creating instructor:', error);
@@ -27,7 +27,7 @@ export const createInstructor = async (instructorData) => {
 //update an instructor
 export const updateInstructor = async (id, updatedData) => {
   try {
-    const response = await axios.put(`${BASE_URL}/${id}`, updatedData);
+    const response = await axios.put(`${BASE_URL}/${id}`, updatedData);//put requet for updating an instructor
     return response.data;
   } catch (error) {
     console.error('Error updating instructor:', error);
