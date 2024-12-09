@@ -18,6 +18,7 @@ export const createCourse = async (courseData) => {
   try {
     console.log(courseData);
     const response = await axios.post(BASE_URL, courseData);
+    console.log('response add code',response);
     return response.data;
   } catch (error) {
     console.error('Error creating course:', error);
@@ -29,6 +30,8 @@ export const createCourse = async (courseData) => {
 export const updateCourse = async (id, updatedData) => {
   try {
     const response = await axios.put(`${BASE_URL}/${id}`, updatedData);
+    console.log('response update code',response);
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error('Error updating course:', error);

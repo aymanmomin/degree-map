@@ -75,7 +75,9 @@ const fetchDepartments = async () => {
         courseCode: selectedCourse.courseCode || "",
         courseTitle: selectedCourse.courseTitle || "",
         courseDescription: selectedCourse.courseDescription || "",
-        keywords: selectedCourse.keywords || [],
+        keywords: selectedCourse.keywords
+        ? selectedCourse.keywords.split(",")
+        : [], // Convert string to array
       });
     }
   }, [selectedCourse]);
@@ -130,27 +132,34 @@ const fetchDepartments = async () => {
     }
   
     try {
+      const formattedKeywords = formData.keywords.length > 0 ? formData.keywords.join(",") : null;
+
       let response;
       if (selectedCourse) {
         response = await updateCourse(selectedCourse.courseCode, {
           ...formData,
-          keywords: formData.keywords,  // Ensure keywords are included
+          keywords: formattedKeywords,  // Ensure keywords are included
         });
+        // await updateCourse(selectedCourse.courseCode, formData);
       } else {
         response = await createCourse({
           ...formData,
-          keywords: formData.keywords,  // Include keywords during creation
+          keywords: formattedKeywords,  // Include keywords during creation
         });
+        // await updateCourse(selectedCourse.courseCode, formData);
+
       }
+
+      
+
+      console.log(response)
   
       // Handle valid response
       if (response) {
-        
-        console.log(response);
-        console.log(response.data);
+        console.log("check this", response);
         await fetchCourses(); // Refresh data
         clearForm();
-        alert(selectedCourse ? "Course updated successfully!" : "Course added successfully!");
+        // alert(selectedCourse ? "Course updated successfully!" : "Course added successfully!");
         showMessage(selectedCourse ? "Course updated successfully!" : "Course added successfully!");
       } else {
         throw new Error("Invalid response structure.");
@@ -158,7 +167,7 @@ const fetchDepartments = async () => {
     } catch (error) {
       console.error("Error saving course:", error);
       alert("Error saving course:", error);
-      showMessage("Failed to save the course. Please try again.", "danger");
+      // showMessage("Failed to save the course. Please try again.", "danger");
     }
   };
   
@@ -259,11 +268,11 @@ const fetchDepartments = async () => {
                 required
               >
                 <option value="">Select</option>
-                {departmentCodes.map((code) => (
-                  <option key={code} value={code}>
-                    {code}
-                  </option>
-                ))}
+              {departments.map((department) => (
+                <option key={department.DepartmentCode} value={department.DepartmentCode}>
+                  {department.DepartmentCode}
+                </option>
+              ))}
               </select>
               <label htmlFor="departmentCode">Department Code</label>
             </div>
