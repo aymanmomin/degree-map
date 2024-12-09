@@ -71,9 +71,8 @@ function Login({ setUserType }) {
               placeholder="Enter your password"
               required
             />
-          </div> */}
-          </div> */}
-          {error && <div className="alert alert-danger py-2">{error}</div>}
+          </div>
+          {error && <div className="alert alert-danger py-2">{error}</div>} */}
           <button type="submit" className="btn btn-primary w-100">
             Login
           </button>
