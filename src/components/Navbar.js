@@ -22,7 +22,7 @@ export default function Navbar({ onLogout }) {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/degree-planner">
+                <Link className="nav-link" to="/dashboard#program-guide">
                   Degree Planner
                 </Link>
               </li>
