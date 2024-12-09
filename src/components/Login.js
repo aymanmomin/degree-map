@@ -6,22 +6,28 @@ function Login({ setUserType }) {
   const [error, setError] = useState("");
 
   const handleLogin = () => {
-    if (!/^\d{8}$/.test(id)) {
-      setError("ID must be 8 digits.");
-      return;
-    }
+    // if (!/^\d{8}$/.test(id)) {
+    //   setError("ID must be 8 digits.");
+    //   return;
+    // }
+    // if (!/^\d{8}$/.test(id)) {
+    //   setError("ID must be 8 digits.");
+    //   return;
+    // }
 
-    // Mock authentication
-    if (id === "10192494" && password === "admin123") {
-      setUserType("admin");
-    } else if (id === "30192494" && password === "student123") {
-      setUserType("student");
-    } else {
-      setError("Invalid credentials. Please try again.");
-      return;
-    }
+    // // Mock authentication
+    // if (id === "10192494" && password === "admin123") {
+    //   setUserType("admin");
+    // } else if (id === "30192494" && password === "student123") {
+    //   setUserType("student");
+    // } else {
+    //   setError("Invalid credentials. Please try again.");
+    //   return;
+    // }
 
-    setError(""); // Clear any previous errors
+    // setError(""); // Clear any previous errors
+
+    setUserType("admin");
   };
 
   return (
@@ -37,7 +43,8 @@ function Login({ setUserType }) {
             handleLogin();
           }}
         >
-          <div className="mb-3">
+          {/* <div className="mb-3">
+          {/* <div className="mb-3">
             <label htmlFor="id" className="form-label">
               ID
             </label>
@@ -65,7 +72,7 @@ function Login({ setUserType }) {
               required
             />
           </div>
-          {error && <div className="alert alert-danger py-2">{error}</div>}
+          {error && <div className="alert alert-danger py-2">{error}</div>} */}
           <button type="submit" className="btn btn-primary w-100">
             Login
           </button>
