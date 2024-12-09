@@ -1,30 +1,37 @@
 import React from "react";
 
-const CourseList = ({ courses, activeCourse, handleCourseClick }) => {
+const CourseList = ({ courses, activeCourse, handleCourseClick, completeCourse, removeCourse }) => {
   return (
-    <div id="card-738138">
+    <div className="card">
       {courses.map((course) => (
-        <div className="card" key={course.code}>
-          <div className="card-header">
-            <a
-              className={`card-link ${activeCourse === course.code ? "" : "collapsed"}`}
-              data-toggle="collapse"
-              data-parent="#card-738138"
-              href={`#card-element-${course.code}`}
+        <div key={course.code} className="card-body">
+          <div className="mr-2" onClick={() => handleCourseClick(course.code)}>
+            <h5 className="card-title">{course.code}</h5>
+            <small>{course.title}</small>
+          </div>
+          <div className="card-text">
+            <button
+              type="button"
+              className={`btn btn-sm ${course.taken ? "btn-success" : "btn-primary"} mr-2`}
+              onClick={() => completeCourse(course.code)}
+              disabled={course.taken}
+            >
+              {course.taken ? "Completed" : "Complete"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-danger mr-2"
+              onClick={() => removeCourse(course.code)}
+            >
+              Remove
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm btn-info"
               onClick={() => handleCourseClick(course.code)}
             >
-              {course.code}
-            </a>
-          </div>
-          <div
-            id={`card-element-${course.code}`}
-            className={`collapse ${activeCourse === course.code ? "show" : ""}`}
-          >
-            <div className="card-body">
-              <p>{course.title}</p>
-              <button className="badge bg-primary rounded-pill">Complete</button>
-              <button className="badge bg-danger rounded-pill">remove</button>
-            </div>
+              View Details
+            </button>
           </div>
         </div>
       ))}

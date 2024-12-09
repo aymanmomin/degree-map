@@ -10,6 +10,10 @@ function Login({ setUserType }) {
     //   setError("ID must be 8 digits.");
     //   return;
     // }
+    // if (!/^\d{8}$/.test(id)) {
+    //   setError("ID must be 8 digits.");
+    //   return;
+    // }
 
     // // Mock authentication
     // if (id === "10192494" && password === "admin123") {
@@ -40,6 +44,7 @@ function Login({ setUserType }) {
           }}
         >
           {/* <div className="mb-3">
+          {/* <div className="mb-3">
             <label htmlFor="id" className="form-label">
               ID
             </label>
@@ -66,6 +71,7 @@ function Login({ setUserType }) {
               placeholder="Enter your password"
               required
             />
+          </div> */}
           </div> */}
           {error && <div className="alert alert-danger py-2">{error}</div>}
           <button type="submit" className="btn btn-primary w-100">

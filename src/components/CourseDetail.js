@@ -5,13 +5,9 @@ const CourseDetail = ({ course }) => {
 
   return (
     <div className="col-md-4">
-      <h2>{course.code}</h2>
+      <h2>{course.title}</h2>
       <p>{course.description}</p>
-      <p>
-        <a className="btn btn-primary" href="#" role="button">
-          View details »
-        </a>
-      </p>
+      <p>{course.units} Units</p>
     </div>
   );
 };
