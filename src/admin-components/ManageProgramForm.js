@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { createProgram, deleteProgram, getAllPrograms, updateProgram } from "../api/programsApi";
+import {
+  createProgram,
+  deleteProgram,
+  getAllPrograms,
+  updateProgram,
+} from "../api/programsApi";
 
 function ManageProgramsForm() {
   const [programs, setPrograms] = useState([]);
@@ -28,23 +33,23 @@ function ManageProgramsForm() {
   // Add this inside the component, before rendering the table
 
   useEffect(() => {
-    //fetch courses from the backend 
+    //fetch courses from the backend
     const fetchPrograms = async () => {
       try {
         const data = await getAllPrograms(); //API function
         console.log("Fetched programs:", data);
         setPrograms(data); //update state with courses
-        
       } catch (error) {
         console.error("Error fetching courses:", error);
+        alert("Failed to fetch programs. Please try again later.");
       }
     };
-  
+
     fetchPrograms();
   }, []);
 
   const formattedPrograms = programs.map((program) => ({
-    id: program.ProgramID || "", 
+    id: program.ProgramID || "",
     programName: program.Name || "", //map "Name" to "programName"
     programDescription: program.Description || "", //map "Description" to "programDescription"
     programType: program.Type || "", //map "Type" to "programType"
@@ -55,7 +60,6 @@ function ManageProgramsForm() {
   const filteredPrograms = formattedPrograms.filter((program) =>
     program.programName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
 
   useEffect(() => {
     // Reset modal form data when a program is selected
@@ -86,7 +90,7 @@ function ManageProgramsForm() {
       alert("Please fill out all fields.");
       return;
     }
-  
+
     try {
       if (selectedProgram) {
         //update an existing program
@@ -99,7 +103,7 @@ function ManageProgramsForm() {
           formData
         );
         console.log("Program updated:", response.data);
-  
+
         //update state with the updated program
         setPrograms((prev) =>
           prev.map((program) =>
@@ -110,11 +114,11 @@ function ManageProgramsForm() {
         //create a new program
         const response = await createProgram(formData);
         console.log("Program created:", response.data);
-  
+
         //add the new program to the state
         setPrograms([...programs, response.data]);
       }
-  
+
       clearForm();
     } catch (error) {
       console.error("Error saving program:", error);
@@ -147,15 +151,23 @@ function ManageProgramsForm() {
       //send DELETE request to backend
       console.log("Selected Program ID:", selectedProgram.id);
       await deleteProgram(`${selectedProgram.id}`);
-  
-      //filter out the deleted program in the frontend
-      setPrograms(programs.filter((program) => program.id !== selectedProgram.id));
+
+      // Fetch updated list of programs
+      const updatedPrograms = await getAllPrograms();
+      setPrograms(updatedPrograms); // Update state with the fresh data
+
+      // Reset form and close modals
+      clearForm();
+      // //filter out the deleted program in the frontend
+      // setPrograms(programs.filter((program) => program.id !== selectedProgram.id));
       setShowConfirmation(false);
-  
+
       //close the program details modal using Bootstrap JS
       const programModal = document.getElementById("programModal");
-      const modalInstance = window.bootstrap.Modal.getInstance(programModal);
-      modalInstance.hide(); //close the modal
+      if (programModal) {
+        const modalInstance = window.bootstrap.Modal.getInstance(programModal);
+        if (modalInstance) modalInstance.hide(); //close the modal
+      }
     } catch (error) {
       console.error("Error deleting program:", error);
       alert("Failed to delete the program. Please try again.");
