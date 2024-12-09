@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { createCourse, deleteCourse, getAllCourses, updateCourse } from "../api/coursesApi";
+import {
+  createCourse,
+  deleteCourse,
+  getAllCourses,
+  updateCourse,
+} from "../api/coursesApi";
 
 function ManageCoursesForm() {
   const [courses, setCourses] = useState([]);
 
   const [formData, setFormData] = useState({
-    courseCode: "",
     departmentCode: "",
     courseNumber: "",
+    courseCode: "",
     courseTitle: "",
     courseDescription: "",
     keywords: [],
@@ -17,13 +22,21 @@ function ManageCoursesForm() {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [keywordInput, setKeywordInput] = useState("");
 
-  const departmentCodes = ["CPSC", "SENG", "DATA", "FREN", "ECON", "MATH", "PHYS"];
+  const departmentCodes = [
+    "CPSC",
+    "SENG",
+    "DATA",
+    "FREN",
+    "ECON",
+    "MATH",
+    "PHYS",
+  ];
   const courseNumbers = Array.from({ length: 700 }, (_, i) =>
     (100 + i).toString()
   );
 
   useEffect(() => {
-    //fetch courses from the backend 
+    //fetch courses from the backend
     const fetchCourses = async () => {
       try {
         const data = await getAllCourses(); //API function
@@ -34,13 +47,20 @@ function ManageCoursesForm() {
         console.error("Error fetching courses:", error);
       }
     };
-  
+
     fetchCourses();
   }, []);
 
   useEffect(() => {
     if (selectedCourse) {
-      setFormData(selectedCourse);
+      setFormData({
+        departmentCode: selectedCourse.departmentCode || "",
+        courseNumber: selectedCourse.courseNumber || "",
+        courseCode: selectedCourse.courseCode || "",
+        courseTitle: selectedCourse.courseTitle || "",
+        courseDescription: selectedCourse.courseDescription || "",
+        keywords: selectedCourse.keywords || [],
+      });
     }
   }, [selectedCourse]);
 
@@ -55,7 +75,18 @@ function ManageCoursesForm() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    setFormData((prevFormData) => {
+      const updatedFormData = { ...prevFormData, [name]: value };
+
+      if (name === "departmentCode" || name === "courseNumber") {
+        updatedFormData.courseCode = `${updatedFormData.departmentCode || ""}${
+          updatedFormData.courseNumber || ""
+        }`;
+      }
+
+      return updatedFormData;
+    });
   };
 
   const handleKeywordAdd = () => {
@@ -76,35 +107,49 @@ function ManageCoursesForm() {
   };
 
   const handleSave = async () => {
-    const courseNumberInt = parseInt(formData.courseNumber, 10);
+    const updatedCourseCode = `${formData.departmentCode} ${formData.courseNumber}`;
+    const updatedFormData = { ...formData, courseCode: updatedCourseCode };
+
+    console.log("Department Code:", formData.departmentCode);
+    console.log("Course Title:", formData.courseTitle);
+    console.log("Course Description:", formData.courseDescription);
+    console.log("Course Number:", formData.courseNumber);
+    console.log("Course Number:", formData.courseCode);
+
     if (
-      !formData.departmentCode ||
-      !formData.courseTitle ||
-      !formData.courseDescription ||
-      isNaN(courseNumberInt) ||
-      courseNumberInt < 100 ||
-      courseNumberInt > 799
+      !updatedFormData.departmentCode.trim() ||
+      !updatedFormData.courseTitle.trim() ||
+      !updatedFormData.courseDescription.trim() ||
+      !/^[1-7][0-9]{2}$/.test(updatedFormData.courseNumber)
     ) {
+      console.log("Department Code:", formData.departmentCode);
+      console.log("Course Title:", formData.courseTitle);
+      console.log("Course Description:", formData.courseDescription);
+      console.log("Course Number:", formData.courseNumber);
+
       alert("Please fill out all required fields correctly.");
       return;
     }
 
     try {
       if (selectedCourse) {
-        //update an existing course
+        // Update existing course
         const response = await updateCourse(
-          `${selectedCourse.courseCode}`,
-          formData
+          selectedCourse.courseCode,
+          updatedFormData
         );
         console.log("Course updated:", response.data);
         setCourses((prev) =>
           prev.map((course) =>
-            course.courseCode === selectedCourse.courseCode ? response.data : course
+            course.courseCode === selectedCourse.courseCode
+              ? response.data
+              : course
           )
         );
       } else {
-        //add a new course
-        const response = await createCourse("/api/courses", formData);
+        // Create new course
+        // const response = await createCourse("/api/courses", updatedFormData);
+        const response = await createCourse(formData);
         console.log("Course created:", response.data);
         setCourses([...courses, response.data]);
       }
@@ -114,6 +159,67 @@ function ManageCoursesForm() {
       alert("Failed to save the course. Please try again.");
     }
   };
+
+  // const handleSave = async () => {
+  //   const courseNumberInt = parseInt(formData.courseNumber, 10);
+
+  //   // Regenerate courseCode to ensure it is correctly set
+  //   const updatedCourseCode = `${formData.departmentCode}${formData.courseNumber}`;
+  //   const updatedFormData = { ...formData, courseCode: updatedCourseCode };
+  //   // setFormData((prev) => ({ ...prev, courseCode: updatedCourseCode }));
+
+  //   console.log("Current formData:", formData);
+  //   console.log("Department Code:", formData.departmentCode);
+  //   console.log("Course Title:", formData.courseTitle);
+  //   console.log("Course Description:", formData.courseDescription);
+  //   console.log("Course Number:", formData.courseNumber);
+
+  //   if (
+  //     !updatedFormData.departmentCode.trim() ||
+  //     !updatedFormData.courseTitle.trim() ||
+  //     !updatedFormData.courseDescription.trim() ||
+  //     !/^[1-7][0-9]{2}$/.test(updatedFormData.courseNumber)
+  //   ) {
+  //     console.log("Department Code:", formData.departmentCode);
+  //     console.log("Course Title:", formData.courseTitle);
+  //     console.log("Course Description:", formData.courseDescription);
+  //     console.log("Course Number:", formData.courseNumber);
+  //     console.log("Course Number:", formData.courseCode);
+
+  //     alert("Please fill out all required fields correctly.");
+  //     return;
+  //   }
+
+  //   try {
+  //     if (selectedCourse) {
+  //       //update an existing course
+  //       const response = await updateCourse(`${selectedCourse.courseCode}`, {
+  //         ...formData,
+  //         courseCode: updatedCourseCode,
+  //       });
+  //       console.log("Course updated:", response.data);
+  //       setCourses((prev) =>
+  //         prev.map((course) =>
+  //           course.courseCode === selectedCourse.courseCode
+  //             ? response.data
+  //             : course
+  //         )
+  //       );
+  //     } else {
+  //       //add a new course
+  //       const response = await createCourse("/api/courses", {
+  //         ...formData,
+  //         courseCode: updatedCourseCode,
+  //       });
+  //       console.log("Course created:", response.data);
+  //       setCourses([...courses, response.data]);
+  //     }
+  //     clearForm();
+  //   } catch (error) {
+  //     console.error("Error saving course:", error);
+  //     alert("Failed to save the course. Please try again.");
+  //   }
+  // };
 
   const clearForm = () => {
     setFormData({
@@ -136,7 +242,7 @@ function ManageCoursesForm() {
 
   const handleDelete = async () => {
     if (!selectedCourse) return;
-  
+
     try {
       await deleteCourse(`${selectedCourse.courseCode}`);
       console.log("Course deleted successfully.");
