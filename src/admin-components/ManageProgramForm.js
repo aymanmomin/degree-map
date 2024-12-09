@@ -37,6 +37,7 @@ function ManageProgramsForm() {
         
       } catch (error) {
         console.error("Error fetching courses:", error);
+        alert("Failed to fetch programs. Please try again later.");
       }
     };
   
@@ -72,7 +73,7 @@ function ManageProgramsForm() {
 
   const validateForm = () => {
     return (
-      formData.id &&
+      // formData.id &&
       formData.programName &&
       formData.programDescription &&
       formData.programType &&
@@ -147,15 +148,23 @@ function ManageProgramsForm() {
       //send DELETE request to backend
       console.log("Selected Program ID:", selectedProgram.id);
       await deleteProgram(`${selectedProgram.id}`);
+
+      // Fetch updated list of programs
+      const updatedPrograms = await getAllPrograms();
+      setPrograms(updatedPrograms); // Update state with the fresh data
   
-      //filter out the deleted program in the frontend
-      setPrograms(programs.filter((program) => program.id !== selectedProgram.id));
+      // Reset form and close modals
+      clearForm();
+      // //filter out the deleted program in the frontend
+      // setPrograms(programs.filter((program) => program.id !== selectedProgram.id));
       setShowConfirmation(false);
   
       //close the program details modal using Bootstrap JS
       const programModal = document.getElementById("programModal");
-      const modalInstance = window.bootstrap.Modal.getInstance(programModal);
-      modalInstance.hide(); //close the modal
+      if (programModal) {
+        const modalInstance = window.bootstrap.Modal.getInstance(programModal);
+        if (modalInstance) modalInstance.hide();//close the modal
+      }
     } catch (error) {
       console.error("Error deleting program:", error);
       alert("Failed to delete the program. Please try again.");
