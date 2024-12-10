@@ -1,3 +1,10 @@
+To run Backend, navigate to src/nodeBackend and run the command node server.js
+
+This should create and seed a database, and leave you with a usable database.sqlite file 
+
+Backend is succefully running with node v20.13.1 and on Ubuntu 22.04.4 LTS
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
